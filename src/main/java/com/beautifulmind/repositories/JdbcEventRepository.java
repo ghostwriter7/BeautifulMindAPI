@@ -21,8 +21,8 @@ public class JdbcEventRepository implements EventRepository {
     @Override
     public Optional<Event> findById(long id) {
         var sql = "select * from event where id = ?";
-        var result = this.jdbcTemplate.queryForObject(sql, this::mapRowToEvent, id);
-        return Optional.ofNullable(result);
+        var result = this.jdbcTemplate.query(sql, this::mapRowToEvent, id);
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
     @Override
