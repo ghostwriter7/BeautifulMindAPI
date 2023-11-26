@@ -47,6 +47,8 @@ public class EventService {
     }
 
     public Event createEvent(Event event) {
+        var dateId = event.getStartDateTime().toLocalDate();
+        event.setDateId(dateId);
         return eventRepository.saveEvent(event);
     }
 
