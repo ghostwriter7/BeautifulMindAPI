@@ -1,5 +1,6 @@
 package com.beautifulmind.controllers;
 
+import com.beautifulmind.model.Event;
 import com.beautifulmind.services.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,5 +29,10 @@ public class EventController {
         return ResponseEntity
                 .badRequest()
                 .body("There is no Event with ID: %d".formatted(id));
+    }
+
+    @PostMapping()
+    public Event saveEvent(@RequestBody Event event) {
+        return eventService.createEvent(event);
     }
 }

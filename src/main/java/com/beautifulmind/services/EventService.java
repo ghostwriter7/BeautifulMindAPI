@@ -46,4 +46,8 @@ public class EventService {
         return eventRepository.findAllByDate(localDateTime);
     }
 
+    public Event createEvent(Event event) {
+        return eventRepository.saveEvent(event);
+    }
+
 }

@@ -3,10 +3,11 @@ package com.beautifulmind.repositories;
 import com.beautifulmind.model.Event;
 import com.beautifulmind.model.EventSnapshotDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -51,11 +52,28 @@ public class JdbcEventRepository implements EventRepository {
         }, date.getMonthValue(), date.getYear());
     }
 
-//    @Override
-//    public void saveEvent(Event event) {
-//        var sql = "insert into event (title, description, dueDate, location) values (?, ?, ?, ?)";
-//        jdbcTemplate.update(sql, event.getTitle(), event.getDescription(), event.getDueDate(), event.getLocation());
-//    }
+    @Override
+    public Event saveEvent(Event event) {
+        var sql = "insert into event (title, description, location, start_datetime, end_datetime, date_id) values (?, ?, ?, ?, ?, ?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update((connection) -> {
+            PreparedStatement ps = connection.prepareStatement(sql, new String[] { "id "});
+            ps.setString(1, event.getTitle());
+            ps.setString(2, event.getDescription());
+            ps.setString(3, event.getLocation());
+            ps.setTimestamp(4, Timestamp.valueOf(event.getStartDateTime()));
+            ps.setTimestamp(5, Timestamp.valueOf(event.getEndDateTime()));
+            ps.setDate(6, Date.valueOf(event.getDateId()));
+            return ps;
+        }, keyHolder);
+
+        if (keyHolder.getKey() != null) {
+            var id = keyHolder.getKey().intValue();
+            event.setId(id);
+            return event;
+        }
+        return event;
+    }
 
     private Event mapRowToEvent(ResultSet resultSet, int rowNum) throws SQLException {
         var e = new Event();
