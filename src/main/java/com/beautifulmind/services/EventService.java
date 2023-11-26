@@ -1,6 +1,7 @@
 package com.beautifulmind.services;
 
 import com.beautifulmind.model.Event;
+import com.beautifulmind.model.EventSnapshotDTO;
 import com.beautifulmind.repositories.EventRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,12 @@ public class EventService {
         var events = eventRepository.findAllByMonth(localDate);
         return StreamSupport.stream(events.spliterator(), false)
                 .collect(Collectors.groupingBy(Event::getDateId));
+    }
+
+    public Map<LocalDate, List<EventSnapshotDTO>> getAllEventSnapshotsByMonth(LocalDate localDate) {
+        var eventSnapshots = eventRepository.findAllEventSnapshotsByMonth(localDate);
+        return StreamSupport.stream(eventSnapshots.spliterator(), false)
+                .collect(Collectors.groupingBy(EventSnapshotDTO::getDate));
     }
 
     public Iterable<Event> getAllEventsByDate(LocalDateTime localDateTime) {

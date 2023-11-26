@@ -18,7 +18,7 @@ public class MonthService {
 
     public Month getMonthDataByYearAndMonth(int month, int year) {
         log.info("Fetching month data for MONTH: {}, YEAR: {}", month, year);
-        var eventsMap = eventService.getAllEventsByMonth(LocalDate.of(year, month, 1));
+        var eventsMap = eventService.getAllEventSnapshotsByMonth(LocalDate.of(year, month, 1));
         var monthDO = new Month(month, year);
         monthDO.setEventMap(eventsMap);
         return monthDO;

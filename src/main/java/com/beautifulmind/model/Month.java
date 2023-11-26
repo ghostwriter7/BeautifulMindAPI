@@ -10,7 +10,7 @@ import java.util.Map;
 public class Month {
     private final int month;
     private final int year;
-    private Map<LocalDate, List<Event>> eventMap;
+    private Map<LocalDate, List<EventSnapshotDTO>> eventMap;
 
     public Month(int month, int year) {
         this.month = month;

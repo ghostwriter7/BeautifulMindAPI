@@ -1,6 +1,7 @@
 package com.beautifulmind.repositories;
 
 import com.beautifulmind.model.Event;
+import com.beautifulmind.model.EventSnapshotDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -34,8 +35,20 @@ public class JdbcEventRepository implements EventRepository {
 
     @Override
     public Iterable<Event> findAllByMonth(LocalDate date) {
-        var sql = "select * from event where month(date_id) = month(?)";
-        return this.jdbcTemplate.query(sql, this::mapRowToEvent, date);
+        var sql = "select * from event where month(date_id) = ? and year(date_id) = ?";
+        return this.jdbcTemplate.query(sql, this::mapRowToEvent, date.getMonthValue(), date.getYear());
+    }
+
+    @Override
+    public Iterable<EventSnapshotDTO> findAllEventSnapshotsByMonth(LocalDate date) {
+        var sql = "select id, title, date_id from event where month(date_id) = ? and year(date_id) = ?";
+        return this.jdbcTemplate.query(sql, (rs, rowNum) -> {
+            var es = new EventSnapshotDTO();
+            es.setTitle(rs.getString("title"));
+            es.setId(rs.getInt("id"));
+            es.setDate(rs.getDate("date_id").toLocalDate());
+            return es;
+        }, date.getMonthValue(), date.getYear());
     }
 
 //    @Override
