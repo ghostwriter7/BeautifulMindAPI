@@ -56,4 +56,8 @@ public class EventService {
         eventRepository.deleteEvent(eventId);
     }
 
+    public Event updateEvent(Event event) {
+        return eventRepository.updateEvent(event);
+    }
+
 }

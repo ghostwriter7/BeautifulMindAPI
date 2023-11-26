@@ -19,4 +19,6 @@ public interface EventRepository {
     Event saveEvent(Event event);
 
     void deleteEvent(int eventId);
+
+    Event updateEvent(Event event);
 }
