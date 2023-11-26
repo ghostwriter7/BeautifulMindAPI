@@ -17,4 +17,6 @@ public interface EventRepository {
     Iterable<EventSnapshotDTO> findAllEventSnapshotsByMonth(LocalDate date);
 
     Event saveEvent(Event event);
+
+    void deleteEvent(int eventId);
 }

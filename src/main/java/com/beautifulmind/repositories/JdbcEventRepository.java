@@ -75,6 +75,12 @@ public class JdbcEventRepository implements EventRepository {
         return event;
     }
 
+    @Override
+    public void deleteEvent(int eventId) {
+        var sql = "delete from event where id = ?";
+        this.jdbcTemplate.update(sql, eventId);
+    }
+
     private Event mapRowToEvent(ResultSet resultSet, int rowNum) throws SQLException {
         var e = new Event();
         e.setId(resultSet.getLong("id"));
