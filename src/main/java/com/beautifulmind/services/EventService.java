@@ -5,8 +5,13 @@ import com.beautifulmind.repositories.EventRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -21,6 +26,12 @@ public class EventService {
     public Optional<Event> getEventById(long id) {
         log.info("Searching for the event (ID: {})", id);
         return eventRepository.findById(id);
+    }
+
+    public Map<LocalDate, List<Event>> getAllEventsByMonth(LocalDate localDate) {
+        var events = eventRepository.findAllByMonth(localDate);
+        return StreamSupport.stream(events.spliterator(), false)
+                .collect(Collectors.groupingBy(Event::getDateId));
     }
 
     public Iterable<Event> getAllEventsByDate(LocalDateTime localDateTime) {

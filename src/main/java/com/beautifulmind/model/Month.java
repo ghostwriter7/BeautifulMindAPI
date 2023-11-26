@@ -3,12 +3,17 @@ package com.beautifulmind.model;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Month {
-    private int month;
-    private int year;
-    private HashMap<LocalDate, List<Day>> dayMap;
+    private final int month;
+    private final int year;
+    private Map<LocalDate, List<Event>> eventMap;
+
+    public Month(int month, int year) {
+        this.month = month;
+        this.year = year;
+    }
 }

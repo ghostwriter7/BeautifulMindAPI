@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -32,17 +33,25 @@ public class JdbcEventRepository implements EventRepository {
     }
 
     @Override
-    public void saveEvent(Event event) {
-        var sql = "insert into event (title, description, dueDate, location) values (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, event.getTitle(), event.getDescription(), event.getDueDate(), event.getLocation());
+    public Iterable<Event> findAllByMonth(LocalDate date) {
+        var sql = "select * from event where month(date_id) = month(?)";
+        return this.jdbcTemplate.query(sql, this::mapRowToEvent, date);
     }
+
+//    @Override
+//    public void saveEvent(Event event) {
+//        var sql = "insert into event (title, description, dueDate, location) values (?, ?, ?, ?)";
+//        jdbcTemplate.update(sql, event.getTitle(), event.getDescription(), event.getDueDate(), event.getLocation());
+//    }
 
     private Event mapRowToEvent(ResultSet resultSet, int rowNum) throws SQLException {
         var e = new Event();
         e.setId(resultSet.getLong("id"));
+        e.setDateId(resultSet.getDate("date_id").toLocalDate());
         e.setTitle(resultSet.getString("title"));
         e.setDescription(resultSet.getString("description"));
-        e.setDueDate(resultSet.getTimestamp("dueDate").toLocalDateTime());
+        e.setStartDateTime(resultSet.getTimestamp("start_datetime").toLocalDateTime());
+        e.setEndDateTime(resultSet.getTimestamp("end_datetime").toLocalDateTime());
         e.setLocation(resultSet.getString("location"));
         return e;
     }

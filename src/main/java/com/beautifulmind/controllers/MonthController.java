@@ -19,9 +19,9 @@ public class MonthController {
 
     @GetMapping
     public Month getMonthData(
-            @RequestParam int month,
+            @RequestParam(required = false) int month,
             @RequestParam int year
     ) {
-       return monthService.getMonthByYearAndMonth(month, year);
+       return monthService.getMonthDataByYearAndMonth(month, year);
     }
 }
